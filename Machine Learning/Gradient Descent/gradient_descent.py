@@ -2,35 +2,38 @@
 Finds optimized coefficients m and b in y = mx + b for line of best fit.
 Does so by finding minimum using gradient descent.
 Essential what sklearn.linear_model does 
+
+1. Take derivative of Loss Function for each paramater in it (Gradient of the Loss Funtion)
+2. Pick random values for the parameter 
+3. Plug the parameter values into the derivatives
+4. Calculate Step size. Step Size = Slope * Learning ratge
+5 Calculate new params New Parameters = Old Paramater - stepsize
+Repeats 3-5 until close to 0 or maximum # of steps
 """
 
 import numpy as np
 
-initial_m = 1
-iterations = 15
-step = 0.01
 
-
-def gradient_descent(x, y):
-    m_curr = b_curr = 0
-    m_curr = initial_m
-    residuals = np.zeros(16)
+def descend(x, y):
+    curr_m = curr_b = 0
+    rate = 0.05
+    n = x.shape[0]
+    iterations = 500
 
     for i in range(iterations):
-        y_predict = x * m_curr + b_curr
+        y_hat = curr_m * x + curr_b
+        cost = (1 / n) * sum([i**2 for i in (y - y_hat)])
+        slope_m = (-2 / n) * sum(x * (y - y_hat))
+        slope_b = (-2 / n) * sum(y - y_hat)
 
-        sum_of_squares = y - y_predict
-        z = sum([val**2 for val in sum_of_squares])
-        residuals[i] = z
+        # way for loop to reduce redundant code
+        curr_m = curr_m - slope_m * rate
+        curr_b = curr_b - slope_b * rate
 
-        tang = (residuals[i + 1] - residuals[i]) / step
-        m_curr = m_curr - tang
-        print(m_curr)
-
-    return (m_curr, b_curr)
+        print(f"m: {curr_b}, b: {curr_m}, cost {cost} iteration {i}")
 
 
 x = np.array([1, 2, 3, 4, 5])
 y = np.array([5, 7, 9, 11, 13])
 
-gradient_descent(x, y)
+descend(x, y)
