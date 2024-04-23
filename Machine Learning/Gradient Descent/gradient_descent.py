@@ -35,9 +35,3 @@ def descend(x, y):
         # way for loop to reduce redundant code
         curr_m = curr_m - slope_m * rate
         curr_b = curr_b - slope_b * rate
-
-
-x = np.array([1, 2, 3, 4, 5])
-y = np.array([5, 7, 9, 11, 13])
-
-descend(x, y)
