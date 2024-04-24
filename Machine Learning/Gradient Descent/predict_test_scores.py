@@ -4,4 +4,7 @@ import numpy as np
 
 df = pd.read_csv("Machine Learning/Gradient Descent/test_scores.csv")
 
-print(type(df["math"]))
+x = np.array(df["math"])
+y = np.array(df["cs"])
+
+t = gd.descend(x, y)

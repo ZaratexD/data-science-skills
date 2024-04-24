@@ -13,11 +13,12 @@ Repeats 3-5 until close to 0 or maximum # of steps
 
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 
 def descend(x, y):
     curr_m = curr_b = 0
-    rate = 0.08
+    rate = 0.0001
     n = x.shape[0]
     iterations = 500
     cost_g = m = b = [0] * iterations
@@ -35,3 +36,11 @@ def descend(x, y):
         # way for loop to reduce redundant code
         curr_m = curr_m - slope_m * rate
         curr_b = curr_b - slope_b * rate
+
+
+df = pd.read_csv("Machine Learning/Gradient Descent/test_scores.csv")
+
+x = np.array(df["math"])
+y = np.array(df["cs"])
+
+descend(x, y)
