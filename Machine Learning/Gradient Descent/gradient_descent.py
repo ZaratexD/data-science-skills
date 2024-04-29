@@ -11,9 +11,12 @@ Essential what sklearn.linear_model does
 Repeats 3-5 until close to 0 or maximum # of steps
 """
 
+import math
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+
+### TODO: use plt to see change in LOB. implement way that rate is changed automatically
 
 
 def descend(x, y):
@@ -23,7 +26,18 @@ def descend(x, y):
     iterations = 500
     cost_g = m = b = [0] * iterations
 
-    for i in range(iterations):
+    y_hat = curr_m * x + curr_b
+    i_cost = (1 / n) * sum([i**2 for i in (y - y_hat)])
+    slope_m = (-2 / n) * sum(x * (y - y_hat))
+    slope_b = (-2 / n) * sum(y - y_hat)
+
+    i = 0
+    cost = i_cost + 2
+    print(i_cost, cost)
+    while math.isclose(i_cost, cost, rel_tol=1e-20) != True:
+        if i == iterations:
+            break
+        i_cost = cost
         y_hat = curr_m * x + curr_b
         cost = (1 / n) * sum([i**2 for i in (y - y_hat)])
         slope_m = (-2 / n) * sum(x * (y - y_hat))
@@ -32,7 +46,7 @@ def descend(x, y):
         cost_g[i] = cost
         m[i] = curr_m
         b[i] = curr_b
-
+        i += 1
         # way for loop to reduce redundant code
         curr_m = curr_m - slope_m * rate
         curr_b = curr_b - slope_b * rate
