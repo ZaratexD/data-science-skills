@@ -47,10 +47,46 @@ def forward_prop(W1, b1, W2, b2, X):
     return Z1, A1, Z2, A2
 
 
+# review what this is have a general understanding but lacking why it is important.
 def one_hot(Y):
     one_hot_Y = np.zeros((Y.size, Y.max() + 1))
     one_hot_Y[np.arange(Y.size), Y] = 1
+    one_hot_Y = one_hot_Y.T
+    return one_hot_Y.T
+
+
+def deriv_ReLU(Z):
+    return Z > 0
 
 
 def back_prop(Z1, A1, Z2, A2, W2, Y):
-    pass
+    m = Y.size
+    one_hot_Y.T = one_hot(Y)
+    dZ2 = A2 - one_hot_Y
+    dW2 = 1 / m * dZ2.dot(A1.T)
+    db2 = 1 / m * np.sum(dZ2, 2)
+    dZ1 = W2.T.dot(dZ2) * deriv_ReLU(Z1)
+    dW1 = 1 / m * dZ2.dot(X.T)
+    db1 = 1 / m * np.sum(dZ1, 2)
+
+    return dW1, db1, dW2, db2
+
+
+def update_params(W1, b1, W2, b2, dW1, db1, dW2, db2, alpha):
+    W1 = W1 - alpha * dW1
+    b1 = b1 - alpha * db1
+    W2 = W2 - alpha * dW2
+    b2 = b2 - alpha * db2
+    return W1, b1, W2, b2
+
+
+def descend(X, Y, iterations, alpha):
+    W1, b1, W2, b2 = init_params()
+    for i in range(iterations):
+        Z1, A1, Z2, A2 = forward_prop(W1, b1, W2, b2, X)
+        dW1, db1, dW2, db2 = back_prop(Z1, A1, Z2, A2, W2, X, Y)
+        W1, b1, W2, b2 = update_params(W1, b1, W2, b2, dW1, db1, dW2, db2, alpha)
+        if i % 50 == 0:
+            print("Iterations: ", i)
+            print("Accuracy: ", get_accuracy(get_predicitons(A2), Y))
+        return W1, b1, W2, b2
